@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Brugg Travel</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		.leaflet-container {
+			height: 600px;
+			width: 600px;
+			max-width: 100%;
+			max-height: 100%;
+		}
+		.div-icon {
+			font-size: 2em;
+			text-shadow: 2px 2px #00000077;
+		}
+	</style>
+	
+</head>
+<body>
+
+<div id="map"></div>
+<script>
+
+	const center = {latlng : [47.48178,8.21136], name : 'Brugg'};
+	const places = [
+		{
+		latlng: [47.6003,7.5342],
+		name : "Basel",
+		label : "1h",
+		icon : "✈"
+		},
+		{
+			latlng: [47.4600,8.5527],
+			name : "Zürich",
+			label : "45m",
+			icon : "✈"
+		},	
+		{
+			latlng: [46.94874,7.43921],
+			name : "Bern",
+			label : "50m",
+			icon : "🚉"
+		}
+	/*
+		{
+			latlng: [47.47592,8.30775],
+			name : "Baden",
+			label : "10m",
+			icon : "🚉"
+		}*/
+	]
+	
+	const map = L.map('map', {zoomControl:false, attributionControl:false}).setView(center.latlng, 8);
+
+	const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		maxZoom: 19,
+		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	}).addTo(map);
+	
+	L.marker(center.latlng).addTo(map);
+
+	places.forEach(place => {
+		L.marker(place.latlng, {icon: L.divIcon({className: 'div-icon', html: place.icon})}).addTo(map);
+		const line = L.polyline([place.latlng,center.latlng], {color: '#237cc9'}).addTo(map);
+		line.bindTooltip(place.label).openTooltip();
+	});
+	map.fitBounds(places.map(p => p.latlng));
+
+</script>
+
+</body></html>
